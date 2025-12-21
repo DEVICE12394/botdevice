@@ -37,12 +37,28 @@ class GoogleSheetsService:
         try:
             scopes = ["https://www.googleapis.com/auth/spreadsheets", "https://www.googleapis.com/auth/drive"]
             creds = None
+            
+            # 1. Try Local File
             if os.path.exists(LOCAL_CREDENTIALS_FILE):
+                print(f"[INFO] Loading from local file: {LOCAL_CREDENTIALS_FILE}")
                 creds = Credentials.from_service_account_file(LOCAL_CREDENTIALS_FILE, scopes=scopes)
+            
+            # 2. Try Env Var (Cloud Deployment)
+            elif os.environ.get("GOOGLE_CREDENTIALS_JSON"):
+                print("[INFO] Loading from Environment Variable")
+                import json
+                # Load JSON from string stored in Env Var
+                creds_dict = json.loads(os.environ.get("GOOGLE_CREDENTIALS_JSON"))
+                creds = Credentials.from_service_account_info(creds_dict, scopes=scopes)
+            
+            # 3. Fallback to older env var logic
             elif GOOGLE_SERVICE_ACCOUNT_JSON and os.path.exists(GOOGLE_SERVICE_ACCOUNT_JSON):
                 creds = Credentials.from_service_account_file(GOOGLE_SERVICE_ACCOUNT_JSON, scopes=scopes)
             
-            if not creds: return False
+            if not creds: 
+                print("[ERROR] No credentials found (File or Env Var).")
+                return False
+
             self.client = gspread.authorize(creds)
             spreadsheet = self.client.open_by_key(SPREADSHEET_ID)
             self.inventory_sheet = spreadsheet.get_worksheet(0)
