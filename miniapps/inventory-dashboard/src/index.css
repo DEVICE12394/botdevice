@@ -1,0 +1,110 @@
+:root {
+  font-family: "Outfit", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: var(--tg-theme-text-color, #ffffff);
+  background-color: var(--tg-theme-bg-color, #0f0f0f);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--tg-theme-bg-color, #1a1a1a);
+}
+
+#root {
+  width: 100%;
+  max-width: 100vw;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Glassmorphism Cards */
+.card {
+  background: var(--tg-theme-secondary-bg-color, rgba(255, 255, 255, 0.05));
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.card:active {
+  transform: scale(0.98);
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(90deg, #ff8c00, #ff0080);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--tg-theme-text-color, #fff);
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--tg-theme-hint-color, #888);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Button */
+button {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  padding: 0.8em 1.2em;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  background-color: var(--tg-theme-button-color, #646cff);
+  color: var(--tg-theme-button-text-color, #fff);
+  cursor: pointer;
+  transition: opacity 0.25s;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.status-badge {
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+.status-ok {
+  background: rgba(0, 255, 100, 0.1);
+  color: #00ff7f;
+}
+.status-warn {
+  background: rgba(255, 165, 0, 0.1);
+  color: #ffa500;
+}

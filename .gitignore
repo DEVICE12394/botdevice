@@ -1,0 +1,25 @@
+# Security - Secrets
+.env
+*.json
+# Keep config/settings.py but ignore actual keys if hardcoded (better to use env vars)
+
+# Logs
+logs/
+*.log
+
+# Bytecode
+__pycache__/
+*.py[cod]
+
+# Dependencies
+venv/
+env/
+node_modules/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Mini App Build
+miniapps/inventory-dashboard/dist/
+miniapps/inventory-dashboard/.vercel/

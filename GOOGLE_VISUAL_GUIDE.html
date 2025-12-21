@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Visual - Credenciales de Google</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            color: #4285f4;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .step-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            border-left: 6px solid #4285f4;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 50px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 15px;
+            float: left;
+        }
+        
+        .step-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 15px;
+            margin-left: 65px;
+        }
+        
+        .step-content {
+            clear: both;
+            margin-top: 20px;
+            line-height: 1.8;
+            font-size: 1.1em;
+        }
+        
+        .action-list {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .action-list li {
+            margin: 12px 0;
+            padding-left: 10px;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #856404;
+        }
+        
+        .success {
+            background: #d4edda;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #155724;
+        }
+        
+        .code {
+            background: #2d2d2d;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .warning::before {
+            content: "⚠️ ";
+            font-size: 1.3em;
+        }
+        
+        .tip {
+            background: #d1ecf1;
+            border: 2px solid #0c5460;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .tip::before {
+            content: "💡 ";
+            font-size: 1.3em;
+        }
+        
+        .btn-link {
+            display: inline-block;
+            background: #4285f4;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s;
+        }
+        
+        .btn-link:hover {
+            background: #357ae8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.4);
+        }
+        
+        .screenshot-box {
+            border: 3px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            margin: 15px 0;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+        }
+        
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+        }
+        
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: #e9ecef;
+            margin: 0 5px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #6c757d;
+        }
+        
+        .progress-step.active {
+            background: linear-gradient(135deg, #4285f4, #34a853);
+            color: white;
+        }
+        
+        img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Guía Visual: Credenciales de Google</h1>
+            <p>Sigue estos pasos para configurar Google Sheets con tu bot</p>
+        </div>
+        
+        <div class="progress-indicator">
+            <div class="progress-step active">1. Cloud Console</div>
+            <div class="progress-step">2. Crear Proyecto</div>
+            <div class="progress-step">3. Habilitar API</div>
+            <div class="progress-step">4. Service Account</div>
+            <div class="progress-step">5. Descargar JSON</div>
+        </div>
+        
+        <!-- PASO 1 -->
+        <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="step-title">Acceder a Google Cloud Console</div>
+            <div class="step-content">
+                <p><strong>Ya he abierto la ventana por ti</strong>, pero necesitas iniciar sesión.</p>
+                
+                <div class="action-list">
+                    <ol>
+                        <li>Ve a la ventana del navegador que se acaba de abrir</li>
+                        <li>Inicia sesión con tu cuenta de Google</li>
+                        <li>Acepta los términos si es tu primera vez</li>
+                    </ol>
+                </div>
+                
+                <div class="tip">
+                    <strong>Consejo:</strong> Si no ves la ventana, haz clic aquí:
+                    <a href="https://console.cloud.google.com/" target="_blank" class="btn-link">
+                        Abrir Google Cloud Console
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PASO 2 -->
+        <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="step-title">Crear un Nuevo Proyecto</div>
+            <div class="step-content">
+                <p>Una vez que hayas iniciado sesión:</p>
+                
+                <div class="action-list">
+                    <ol>
+                        <li>En la parte superior, busca el <span class="highlight">selector de proyecto</span></li>
+                        <li>Haz clic en <span class="highlight">"Nuevo Proyecto"</span> o <span class="highlight">"New Project"</span></li>
+                        <li>Nombre del proyecto: <code>telegram-bot-sheets</code></li>
+                        <li>Haz clic en <span class="success">"Crear"</span></li>
+                    </ol>
+                </div>
+                
+                <div class="warning">
+                    <strong>Importante:</strong> Espera unos segundos mientras Google crea el proyecto. Verás una notificación cuando esté listo.
+                </div>
+            </div>
+        </div>
+        
+        <!-- PASO 3 -->
+        <div class="step-card">
+            <div class="step-number">3</div>
+            <div class="step-title">Habilitar Google Sheets API</div>
+            <div class="step-content">
+                <p>Ahora necesitas habilitar la API de Google Sheets:</p>
+                
+                <div class="action-list">
+                    <ol>
+                        <li>En el menú lateral (☰), ve a <span class="highlight">"APIs y servicios"</span> → <span class="highlight">"Biblioteca"</span></li>
+                        <li>En el buscador, escribe: <code>Google Sheets API</code></li>
+                        <li>Haz clic en el resultado <span class="highlight">"Google Sheets API"</span></li>
+                        <li>Haz clic en el botón azul <span class="success">"HABILITAR"</span></li>
+                    </ol>
+                </div>
+                
+                <div class="tip">
+                    <strong>Atajo rápido:</strong> 
+                    <a href="https://console.cloud.google.com/apis/library/sheets.googleapis.com" target="_blank" class="btn-link">
+                        Ir directamente a Google Sheets API
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PASO 4 -->
+        <div class="step-card">
+            <div class="step-number">4</div>
+            <div class="step-title">Crear Service Account (Cuenta de Servicio)</div>
+            <div class="step-content">
+                <p>Esta es la parte MÁS IMPORTANTE:</p>
+                
+                <div class="action-list">
+                    <ol>
+                        <li>Ve a <span class="highlight">"APIs y servicios"</span> → <span class="highlight">"Credenciales"</span></li>
+                        <li>Haz clic en <span class="highlight">"+ CREAR CREDENCIALES"</span> (arriba)</li>
+                        <li>Selecciona <span class="highlight">"Cuenta de servicio"</span> / <span class="highlight">"Service Account"</span></li>
+                        <li>Completa el formulario:
+                            <ul style="margin-top: 10px;">
+                                <li><strong>Nombre:</strong> <code>telegram-bot</code></li>
+                                <li><strong>ID:</strong> Se genera automáticamente</li>
+                                <li><strong>Descripción:</strong> <code>Bot de Telegram para Google Sheets</code></li>
+                            </ul>
+                        </li>
+                        <li>Haz clic en <span class="success">"CREAR Y CONTINUAR"</span></li>
+                        <li>En "Otorgar acceso", selecciona el rol: <span class="highlight">"Editor"</span></li>
+                        <li>Haz clic en <span class="success">"CONTINUAR"</span></li>
+                        <li>Haz clic en <span class="success">"LISTO"</span></li>
+                    </ol>
+                </div>
+                
+                <div class="tip">
+                    <strong>Atajo directo:</strong>
+                    <a href="https://console.cloud.google.com/iam-admin/serviceaccounts/create" target="_blank" class="btn-link">
+                        Crear Service Account Ahora
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PASO 5 -->
+        <div class="step-card">
+            <div class="step-number">5</div>
+            <div class="step-title">Descargar el Archivo JSON</div>
+            <div class="step-content">
+                <p>¡Ya casi terminas! Ahora descarga las credenciales:</p>
+                
+                <div class="action-list">
+                    <ol>
+                        <li>En la lista de Service Accounts, encuentra <code>telegram-bot@...</code></li>
+                        <li>Haz clic en el <span class="highlight">email de la service account</span></li>
+                        <li>Ve a la pestaña <span class="highlight">"CLAVES"</span> / <span class="highlight">"KEYS"</span></li>
+                        <li>Haz clic en <span class="highlight">"AGREGAR CLAVE"</span> → <span class="highlight">"Crear clave nueva"</span></li>
+                        <li>Selecciona tipo: <span class="highlight">"JSON"</span></li>
+                        <li>Haz clic en <span class="success">"CREAR"</span></li>
+                    </ol>
+                </div>
+                
+                <div class="warning">
+                    <strong>¡Importante!</strong> Se descargará un archivo .json automáticamente. <strong>¡Guárdalo bien!</strong> Este archivo contiene las credenciales secretas.
+                </div>
+                
+                <div class="screenshot-box">
+                    <p>📥 El archivo se descargará con un nombre parecido a:<br>
+                    <code>telegram-bot-sheets-abc123def456.json</code></p>
+                </div>
+                
+                <div class="tip">
+                    <strong>Copia el email:</strong> Mientras estás aquí, copia el email de la service account (algo como <code>telegram-bot@proyecto-123.iam.gserviceaccount.com</code>). Lo necesitarás en el siguiente paso.
+                </div>
+            </div>
+        </div>
+        
+        <!-- PASO 6 -->
+        <div class="step-card">
+            <div class="step-number">6</div>
+            <div class="step-title">Crear Google Spreadsheet</div>
+            <div class="step-content">
+                <p>Ahora necesitas crear una hoja de cálculo:</p>
+                
+                <div class="action-list">
+                    <ol>
+                        <li>Ya he abierto Google Sheets en otra ventana (o <a href="https://sheets.google.com/" target="_blank">ábrelo aquí</a>)</li>
+                        <li>Crea una nueva hoja (botón <span class="highlight">"+"</span> o <span class="highlight">"Blank"</span>)</li>
+                        <li>Nómbrala: <code>Telegram Bot Messages</code></li>
+                        <li><strong>IMPORTANTE:</strong> Haz clic en <span class="highlight">"Compartir"</span> (botón verde arriba a la derecha)</li>
+                        <li>Pega el <strong>email de la service account</strong> que copiaste antes</li>
+                        <li>Dale permisos de <span class="highlight">"Editor"</span></li>
+                        <li>Haz clic en <span class="success">"Enviar"</span></li>
+                    </ol>
+                </div>
+                
+                <div class="warning">
+                    <strong>¡MUY IMPORTANTE!</strong> Si no compartes la hoja con el email de la service account, el bot NO podrá escribir en ella.
+                </div>
+                
+                <p style="margin-top: 20px;"><strong>Copia el ID de la hoja:</strong></p>
+                <div class="code">
+https://docs.google.com/spreadsheets/d/<span style="color: yellow;">ESTE_ES_EL_ID</span>/edit
+                </div>
+                
+                <div class="tip">
+                    El ID es la parte larga de letras y números en la URL de tu hoja.
+                </div>
+            </div>
+        </div>
+        
+        <!-- PASO 7 -->
+        <div class="step-card">
+            <div class="step-number">7</div>
+            <div class="step-title">Configurar el Bot</div>
+            <div class="step-content">
+                <p>¡Ya tienes todo! Ahora configura el bot:</p>
+                
+                <div class="action-list">
+                    <ol>
+                        <li>Abre el archivo JSON que descargaste</li>
+                        <li>Copia TODO su contenido (desde { hasta })</li>
+                        <li>Ve al <strong>asistente de configuración</strong> (SETUP_CREDENTIALS.html)</li>
+                        <li>Pega el contenido en el campo "JSON"</li>
+                        <li>Pega el ID de la hoja en el campo correspondiente</li>
+                        <li>Haz clic en <span class="success">"Generar Archivo .env"</span></li>
+                    </ol>
+                </div>
+                
+                <div class="tip">
+                    <strong>Alternativa rápida:</strong> También puedes mover el archivo JSON a la carpeta del proyecto y renombrarlo a <code>credentials.json</code>
+                </div>
+            </div>
+        </div>
+        
+        <!-- RESUMEN -->
+        <div class="step-card" style="background: linear-gradient(135deg, #d4edda, #c3e6cb); border-left: 6px solid #28a745;">
+            <div class="step-title" style="color: #155724;">✅ Resumen - Lo que necesitas:</div>
+            <div class="step-content">
+                <table style="width: 100%; background: white; padding: 15px; border-radius: 8px;">
+                    <tr style="border-bottom: 2px solid #ddd;">
+                        <th style="padding: 10px; text-align: left;">Item</th>
+                        <th style="padding: 10px; text-align: left;">¿Qué es?</th>
+                        <th style="padding: 10px; text-align: left;">Dónde va</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><strong>Archivo JSON</strong></td>
+                        <td style="padding: 10px;">Credenciales descargadas</td>
+                        <td style="padding: 10px;"><code>GOOGLE_SERVICE_ACCOUNT_JSON</code></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><strong>Spreadsheet ID</strong></td>
+                        <td style="padding: 10px;">ID de la hoja (de la URL)</td>
+                        <td style="padding: 10px;"><code>GOOGLE_SPREADSHEET_ID</code></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px;"><strong>Email compartido</strong></td>
+                        <td style="padding: 10px;">Service account email</td>
+                        <td style="padding: 10px;">Compartir la hoja con este email</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; padding: 20px; background: white; border-radius: 15px;">
+            <h2 style="color: #4285f4; margin-bottom: 15px;">🎉 ¡Listo para configurar!</h2>
+            <p style="font-size: 1.2em; margin-bottom: 20px;">Una vez que tengas el archivo JSON y el Spreadsheet ID:</p>
+            <a href="SETUP_CREDENTIALS.html" class="btn-link" style="font-size: 1.2em; padding: 20px 40px;">
+                Ir al Asistente de Configuración →
+            </a>
+        </div>
+    </div>
+</body>
+</html>
