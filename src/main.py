@@ -6,11 +6,22 @@ import os
 import gspread
 from datetime import datetime
 from google.oauth2.service_account import Credentials
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 from telegram.ext import (
     Application, CommandHandler, MessageHandler, filters, ContextTypes
 )
-from config.settings import TELEGRAM_BOT_TOKEN, GOOGLE_SERVICE_ACCOUNT_JSON, GOOGLE_SPREADSHEET_ID
+import logging
+from config.settings import TELEGRAM_BOT_TOKEN, GOOGLE_SERVICE_ACCOUNT_JSON
+
+# --- Dashboard URL (Localtunnel) ---
+DASHBOARD_URL = "https://bot-inventario-pro-99.loca.lt"
+
+# Enable logging
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+logger = logging.getLogger(__name__)
 
 # --- Config ---
 LOGS_DIR = "logs"
@@ -61,7 +72,11 @@ class GoogleSheetsService:
 
             self.client = gspread.authorize(creds)
             spreadsheet = self.client.open_by_key(SPREADSHEET_ID)
-            self.inventory_sheet = spreadsheet.get_worksheet(0)
+            
+            try: 
+                self.inventory_sheet = spreadsheet.worksheet("Inventory")
+            except:
+                self.inventory_sheet = spreadsheet.get_worksheet(0)
             
             try: self.logs_sheet = spreadsheet.worksheet("notes")
             except:
@@ -120,6 +135,22 @@ class GoogleSheetsService:
             return {"critical": crit, "warning": warn}
         except: return None
         
+    def get_stats(self):
+        """Devuelve estadísticas generales del inventario"""
+        if not self.connected and not self.connect(): return None
+        try:
+            records = self.inventory_sheet.get_all_records()
+            families = set(r.get('family') for r in records if r.get('family'))
+            low_stock = sum(1 for r in records if safe_float(r.get('quantity')) <= safe_float(r.get('order_point')) and safe_float(r.get('order_point')) > 0)
+            return {
+                "total": len(records),
+                "families": len(families),
+                "low_stock": low_stock
+            }
+        except Exception as e:
+            print(f"[ERROR] Stats failed: {e}")
+            return None
+
     def search_product(self, query):
         if not self.connected and not self.connect(): return None
         try:
@@ -166,9 +197,57 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"📥 `/in <sku> <cant>` - Entrada\n"
         f"📤 `/out <sku> <cant>` - Salida\n"
         f"🔎 `/buscar <sku>` - Consultar\n"
-        f"📉 `/check` - Ver Alertas\n"
-        f"✅ Alertas auto: Activadas"
+        f"📉 `/check` - Alertas de Stock\n"
+        f"📊 `/resumen` - Estadísticas\n"
+        f"❓ `/help` - Ver todos los comandos\n\n"
+        f"✅ Monitoreo de alertas: Activo"
     , parse_mode='Markdown')
+
+async def cmd_help(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Muestra guía de uso"""
+    help_text = (
+        "📚 **Guía de Comandos v4.0**\n\n"
+        "📦 **Gestión de Stock:**\n"
+        "• `/in SKU CANT` - Suma cantidad al producto.\n"
+        "• `/out SKU CANT` - Resta cantidad al producto.\n\n"
+        "🔍 **Consultas:**\n"
+        "• `/buscar TEXTO` - Búsqueda profunda por nombre, SKU o descripción.\n"
+        "• `/check` - Muestra productos agotados o críticos.\n"
+        "• `/resumen` - Estadísticas generales (total de ítems, familias).\n\n"
+        "📝 **Bitácora:**\n"
+        "• Cualquier mensaje que envíes (que no sea un comando) se guardará automáticamente en la pestaña 'notes' de tu hoja de cálculo."
+    )
+    await update.message.reply_text(help_text, parse_mode='Markdown')
+
+async def cmd_resumen(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Muestra estadísticas generales"""
+    stats = sheets.get_stats()
+    if not stats:
+        await update.message.reply_text("❌ No se pudieron cargar las estadísticas.")
+        return
+        
+    msg = (
+        "📈 **Resumen de Inventario**\n\n"
+        f"📦 **Total items:** {stats['total']}\n"
+        f"🗂️ **Categorías/Familias:** {stats['families']}\n"
+        f"⚠️ **Alertas de stock:** {stats['low_stock']}\n\n"
+        "Usa `/check` para ver el detalle o `/dashboard` para ver la gráfica."
+    )
+    await update.message.reply_text(msg, parse_mode='Markdown')
+
+async def cmd_dashboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Muestra botón para abrir la Mini App"""
+    print(f"[DEBUG] Executing /dashboard command for user {update.effective_user.first_name}")
+    keyboard = [
+        [InlineKeyboardButton("📊 Abrir Dashboard", web_app=WebAppInfo(url=DASHBOARD_URL))]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await update.message.reply_text(
+        "🖥️ **Panel de Control Visual**\n"
+        "Haz clic en el botón de abajo para abrir la Mini App de inventario.",
+        reply_markup=reply_markup,
+        parse_mode='Markdown'
+    )
 
 async def cmd_in(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if len(context.args) < 2:
@@ -224,17 +303,32 @@ async def cmd_search(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def handle_msg(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     text = update.message.text
-    sheets.append_log([datetime.now().strftime("%Y-%m-%d %H:%M:%S"), user.first_name, "MESSAGE", text])
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    print(f"[DEBUG] Received message from {user.first_name}: {text}")
+    
+    # Append to log
+    ok = sheets.append_log([ts, user.first_name, "MESSAGE", text])
+    
+    if ok:
+        await update.message.reply_text(f"📝 Bitácora actualizada: {text[:20]}...")
+    else:
+        await update.message.reply_text("⚠️ No pude guardar en Google Sheets, pero recibí tu mensaje.")
 
 def main():
     print("🤖 MANAGER v4.0 STARTING...")
     sheets.connect()
     app = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
     
-    for cmd, handler in [("start", start), ("in", cmd_in), ("out", cmd_out), ("check", cmd_check), ("buscar", cmd_search)]:
+    for cmd, handler in [
+        ("start", start), ("in", cmd_in), ("out", cmd_out), 
+        ("check", cmd_check), ("lowstock", cmd_check),
+        ("buscar", cmd_search), ("resumen", cmd_resumen), ("help", cmd_help),
+        ("dashboard", cmd_dashboard)
+    ]:
         app.add_handler(CommandHandler(cmd, handler))
     
-    app.add_handler(MessageHandler(filters.TEXT, handle_msg))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_msg))
     print("✅ System Ready")
     app.run_polling()
 
