@@ -1,81 +1,42 @@
-# Telegram Bot Simple
+# 🏭 Inventory Management Bot v4.0
 
-Bot de Telegram que guarda mensajes localmente (sin necesidad de Google Sheets).
+Sistema de gestión de inventarios profesional integrado con **Telegram**, **Google Sheets** y una **Telegram Mini App** moderna.
 
-## 🚀 Inicio Rápido
+## 🚀 Características Principales
 
-### 1. Obtén tu Token de Telegram (2 minutos)
+*   📥 **Gestión de Stock:** Entradas (`/in`) y Salidas (`/out`) en tiempo real.
+*   🔎 **Búsqueda Avanzada:** Encuentra productos por SKU, nombre o descripción con `/buscar`.
+*   🚨 **Vigilancia (Watchdog):** Alertas automáticas cada hora para productos con stock bajo o agotados (🔴 Critico / 🟠 Bajo).
+*   📱 **Mini App:** Interfaz visual moderna integrada nativamente en Telegram (React + Vite).
+*   📊 **Google Sheets:** Base de datos persistente y fácil de auditar.
+*   📝 **Bitácora Automática:** Todas las interacciones se guardan en la pestaña `notes`.
 
-1. Abre Telegram
-2. Busca: `@BotFather`
-3. Envía: `/newbot`
-4. Sigue las instrucciones
-5. **Copia el token**
+## 🛠️ Comandos de Telegram
 
-### 2. Configura el Bot
+*   `/start` - Inicia el bot y activa el monitoreo automático.
+*   `/in <sku> <cantidad>` - Registra una entrada de inventario.
+*   `/out <sku> <cantidad>` - Registra una salida de inventario.
+*   `/buscar <texto>` - Busca productos en el inventario.
+*   `/check` - Reporte instantáneo de alertas de stock.
 
-Edita el archivo `.env` y pega tu token:
+## ☁️ Guía de Despliegue (Siempre Online)
 
-```bash
-TELEGRAM_BOT_TOKEN=tu_token_aqui
-```
+Este bot está listo para correr 24/7 en plataformas como **Railway.app**, **Render** o **Heroku**.
 
-### 3. Ejecuta el Bot
+### Pasos para Nube:
+1.  **Sube a GitHub:** (Ya realizado: `git push origin main`).
+2.  **Conecta la Nube:** En Railway, crea un "Nuevo Proyecto" desde tu repo.
+3.  **Variables de Entorno:** Configura estas variables en tu panel de control:
+    *   `TELEGRAM_BOT_TOKEN`: Tu token de BotFather.
+    *   `GOOGLE_SPREADSHEET_ID`: El ID de tu hoja de cálculo.
+    *   `GOOGLE_CREDENTIALS_JSON`: El **contenido completo** de tu archivo JSON (puedes encontrarlo listo para copiar en el archivo `secret_for_cloud.txt` generado localmente).
 
-```bash
-python src/main.py
-```
+## 🖥️ Mini App (Desarrollo Local)
 
-¡Listo! 🎉
-
-## 📝 Características
-
-- ✅ Bot de Telegram funcional
-- ✅ Guarda mensajes en archivo local (`logs/messages.log`)
-- ✅ Comando `/start` - Mensaje de bienvenida
-- ✅ Comando `/stats` - Estadísticas de mensajes
-- ✅ No requiere configuración de Google Sheets
-- ✅ Fácil de configurar (solo necesitas el token)
-
-## 🎯 Uso
-
-Una vez que el bot esté corriendo:
-
-1. Busca tu bot en Telegram por su username
-2. Envía `/start`
-3. Envía cualquier mensaje
-4. El bot lo guardará en `logs/messages.log`
-5. Usa `/stats` para ver estadísticas
-
-## 📊 Archivos Generados
-
-- `logs/messages.log` - Todos los mensajes guardados
-- Formato: `FECHA | USER_ID | USERNAME | MENSAJE`
-
-## 🔧 Requisitos
-
-```bash
-pip install -r requirements.txt
-```
-
-## ❓ Solución de Problemas
-
-### "TELEGRAM_BOT_TOKEN not set"
-→ Asegúrate de que el archivo `.env` existe y contiene tu token
-
-### El bot no responde
-→ Verifica que el token sea correcto
-→ Asegúrate de que el bot esté corriendo
-
-## 🎨 Personalización
-
-Edita `src/main.py` para:
-- Cambiar mensajes de bienvenida
-- Agregar nuevos comandos
-- Modificar el formato del log
-- Agregar más funcionalidades
+Para ver la interfaz gráfica:
+1.  `cd miniapps/inventory-dashboard`
+2.  `npm install`
+3.  `npm run dev`
 
 ---
-
-**¿Quieres agregar Google Sheets después?**
-Ver: `GOOGLE_VISUAL_GUIDE.html` para instrucciones completas.
+Diseñado por Antigravity AI 🤖
