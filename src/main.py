@@ -15,7 +15,7 @@ from config.settings import TELEGRAM_BOT_TOKEN, GOOGLE_SERVICE_ACCOUNT_JSON, GOO
 # --- Config ---
 LOGS_DIR = "logs"
 LOCAL_CREDENTIALS_FILE = "snappy-topic-481406-p9-3673e43ccb98.json"
-SPREADSHEET_ID = "1qQgazyaUQfNcoLNAxU5a2x9utAQl8zNE5FYMUPxdyQU"
+SPREADSHEET_ID = os.getenv('GOOGLE_SPREADSHEET_ID') or "1qQgazyaUQfNcoLNAxU5a2x9utAQl8zNE5FYMUPxdyQU"
 CHECK_INTERVAL_MIN = 60
 
 if not os.path.exists(LOGS_DIR): os.makedirs(LOGS_DIR)
