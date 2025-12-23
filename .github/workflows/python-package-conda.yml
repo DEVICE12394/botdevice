@@ -1,0 +1,110 @@
+name: Python Package using Conda
+
+on: [push]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.10'
+    - name: Add conda to system path
+      run: |
+        # $CONDA is an environment variable pointing to the root of the miniconda directory
+        echo $CONDA/bin >> $GITHUB_PATH
+    - name: Install dependencies
+      run: |
+        conda env update --file environment.yml --name base
+    - name: Lint with flake8
+      run: |
+        conda install flake8
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test with pytest
+      run: |
+        conda install pytest
+        pytest
+            - name: Setup Node.js environment
+  uses: actions/setup-node@v6.1.0
+  with:
+    # Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.
+    node-version: # optional
+    # File containing the version Spec of the version to use.  Examples: package.json, .nvmrc, .node-version, .tool-versions.
+    node-version-file: # optional
+    # Target architecture for Node to use. Examples: x86, x64. Will use system architecture by default.
+    architecture: # optional
+    # Set this option if you want the action to check for the latest available version that satisfies the version spec.
+    check-latest: # optional
+    # Optional registry to set up for auth. Will set the registry in a project level .npmrc and .yarnrc file, and set up auth to read in from env.NODE_AUTH_TOKEN.
+    registry-url: # optional
+    # Optional scope for authenticating against scoped registries. Will fall back to the repository owner when using the GitHub Packages registry (https://npm.pkg.github.com/).
+    scope: # optional
+    # Used to pull node distributions from node-versions. Since there's a default, this is typically not supplied by the user. When running this action on github.com, the default value is sufficient. When running on GHES, you can pass a personal access token for github.com if you are experiencing rate limiting.
+    token: # optional, default is ${{ github.server_url == 'https://github.com' && github.token || '' }}
+    # Used to specify a package manager for caching in the default directory. Supported values: npm, yarn, pnpm.
+    cache: # optional
+    # Set to false to disable automatic caching. By default, caching is enabled when either devEngines.packageManager or the top-level packageManager field in package.json specifies npm as the package manager.
+    package-manager-cache: # optional, default is true
+    # Used to specify the path to a dependency file: package-lock.json, yarn.lock, etc. Supports wildcards or a list of file names for caching multiple dependencies.
+    cache-dependency-path: # optional
+    # Used to specify an alternative mirror to downlooad Node.js binaries from
+    mirror: # optional
+    # The token used as Authorization header when fetching from the mirror
+    mirror-token: # optional
+                      - name: Yor GitHub Action
+  # You may pin to the exact commit or the version.
+  # uses: bridgecrewio/yor-action@04bf3da0c4e8619a307c023ce8f0d196a2d8a4ee
+  uses: bridgecrewio/yor-action@0.3.0
+  with:
+    # directory with infrastructure code to scan
+    directory: # optional, default is .
+    # Run scan on all checks but a specific check identifier (comma separated)
+    tag_groups: # optional
+    # comma delimited list of yor tags to apply
+    tag: # optional
+    # comma delimited list of yor tags to not apply
+    skip_tags: # optional
+    # comma delimited list of paths for yor to skip tagging of
+    skip_dirs: # optional
+    # comma delimited list of paths to external (custom) tags & tag groups plugins
+    custom_tags: # optional
+    # The format of the output. cli, json
+    output_format: # optional
+    # log level
+    log_level: # optional
+    # Choose whether the action will commit changes. Changes will be commited if this is exactly "YES"
+    commit_changes: # optional, default is true
+                      - name: Binoc Bot
+  # You may pin to the exact commit or the version.
+  # uses: autamus/binoc@653df52652bbf536a247402eae479077f4c41479
+  uses: autamus/binoc@v0.3.5
+  with:
+    # Location of the Package Build Instructions
+    repo_path: # optional, default is /
+    # Name used within Git for the commits
+    git_name: # optional, default is Binoc
+    # Email used within Git for the commits
+    git_email: # optional, default is github-action@users.noreply.github.com
+    # Username used within Git for pushing commits
+    git_username: # optional, default is actions-user
+    # Token used for authenticating with the upstream repository
+    git_token: 
+    # Parsing Libraries Enabled
+    parsers_loaded: # optional, default is spack
+    # Skip checking out branches, commits, and pull requests.
+    pr_skip: # optional, default is false
+    # Tells Binoc if it is running as a GitHub action or not.
+    general_action: # optional, default is true
+    # Tells Binoc what prefix to use when creating branches.
+    branch_prefix: # optional, default is binoc/
+    # Tells Binoc where to look for upstream spack package updates.
+    repo_spackupstreamlink: # optional, default is 
+          
